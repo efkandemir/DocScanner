@@ -24,7 +24,7 @@ const Tabs = () => {
             }} >
             <Tab.Screen name="Home" component={HomeScreen} options={{
                 tabBarIcon: ({ focused }) => (
-                    <View className="justify-center items-center flex-col w-[70px] mt-[35px] h-[70px]">
+                    <View className="justify-center items-center flex-col w-[70px] mt-[39px] h-[70px]">
                         <Icon name="home" size={35} color={focused ? "#3498db" : "#95a5a6"} />
                         <Text className={`text-xs mt-1 ${focused ? "text-blue-500 font-bold" : "text-gray-400"}`}>
                             Home
@@ -34,7 +34,7 @@ const Tabs = () => {
             }} />
             <Tab.Screen name="Settings" component={SettingsScreen} options={{
                 tabBarIcon: ({ focused }) => (
-                    <View className="justify-center items-center flex-col w-[70px] mt-[35px] h-[70px]">
+                    <View className="justify-center items-center flex-col w-[70px] mt-[39px] h-[70px]">
                         <Ionicons name="settings" size={35} color={focused ? "#3498db" : "#95a5a6"} />
                         <Text className={`text-xs mt-1 ${focused ? "text-blue-500 font-bold" : "text-gray-400"}`}>
                             Settings
