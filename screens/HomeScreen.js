@@ -1,10 +1,25 @@
-import { View, Text, SafeAreaView, TouchableOpacity, Alert } from 'react-native'
+import { View, Text, SafeAreaView, TouchableOpacity, Alert, StatusBar } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import ImageCards from '../components/ImageCards'
+import Camera from './Camera'
+import { useNavigation } from '@react-navigation/native'
+import { useFocusEffect } from '@react-navigation/native'
+import { Platform } from 'react-native'
 
 export default function HomeScreen() {
+    useFocusEffect(React.useCallback(() => {
+        StatusBar.setBarStyle('dark-content');
+        Platform.OS === 'android' && StatusBar.setBackgroundColor('#60a5fa');
+    }, []))
+
+    const navigation = useNavigation()
     const [isfavpdf, setIsfavpdf] = useState(false)
     const [ispdf, setIspdf] = useState(false)
+
+    const onCamera = () => {
+        navigation.navigate("Camera")
+        console.log("Tıklandı")
+    }
 
     return (
         <SafeAreaView className="items-center flex-1 justify-start bg-blue-400">
@@ -17,7 +32,7 @@ export default function HomeScreen() {
                     <ImageCards props={'Gallery'} />
                 </TouchableOpacity>
                 <TouchableOpacity
-                    className="m-2"
+                    className="m-2" onPress={onCamera}
                 >
                     <ImageCards props={'Camera'} />
                 </TouchableOpacity>

@@ -42,6 +42,7 @@ const Tabs = () => {
                     </View>
                 )
             }} />
+
         </Tab.Navigator>
     );
 }
