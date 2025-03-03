@@ -43,6 +43,18 @@
           "enableMicrophonePermission": true,
           "microphonePermissionText": "QuickPdf needs access to your Microphone."
         }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
+      ],
+      [
+        "expo-file-system",
+        {
+          "permissions": ["READ_EXTERNAL_STORAGE"]
+        }
       ]
     ],
     "extra": {
