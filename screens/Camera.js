@@ -1,8 +1,8 @@
 import React, { useRef, useState } from 'react';
-import { View, Text, Alert, TouchableOpacity, Image, StatusBar, PermissionsAndroid, Platform } from 'react-native';
+import { View, Text, Alert, TouchableOpacity, Image, StatusBar, Platform } from 'react-native';
 import { Camera, useCameraDevice } from 'react-native-vision-camera';
 import { useFocusEffect } from '@react-navigation/native';
-
+import { createAndShowPdf } from '../utils/pdfUtils';
 
 function CameraScreen() {
     const device = useCameraDevice('back');
@@ -30,11 +30,15 @@ function CameraScreen() {
         }
     };
 
-
-
     const retakePhoto = () => {
         setPhotoPath(null);
         setIsPhotoTaken(false);
+    };
+
+    const confirmPhoto = async () => {
+        if (!photoPath) return;
+        console.log("Fotoğraf yolu:", photoPath);
+        await createAndShowPdf(photoPath);
     };
 
     if (device == null) return <Text className="text-red-500 text-lg">Kamera cihazı bulunamadı.</Text>;
@@ -69,7 +73,7 @@ function CameraScreen() {
                         <Text className="text-white font-bold text-lg">Cancel</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity className="bg-black p-4 rounded-full">
+                    <TouchableOpacity className="bg-black p-4 rounded-full" onPress={confirmPhoto}>
                         <Text className="text-white font-bold text-lg">Done</Text>
                     </TouchableOpacity>
                 </View>

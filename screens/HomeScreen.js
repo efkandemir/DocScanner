@@ -1,22 +1,30 @@
 import { View, Text, SafeAreaView, TouchableOpacity, Alert, StatusBar } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as ImagePicker from 'expo-image-picker';
-import ImageCards from '../components/ImageCards';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import { Platform } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { Platform, Linking } from 'react-native';
 import { useCameraPermission } from 'react-native-vision-camera';
-import { Linking } from 'react-native';
+import ImageCards from '../components/ImageCards';
+import { createAndShowPdf } from '../utils/pdfUtils';
 
 export default function HomeScreen() {
-    useFocusEffect(React.useCallback(() => {
+    useEffect(() => {
         StatusBar.setBarStyle('dark-content');
         Platform.OS === 'android' && StatusBar.setBackgroundColor('#60a5fa');
-    }, []));
+    }, []);
 
-    const navigation = useNavigation();
     const [isfavpdf, setIsfavpdf] = useState(false);
     const [ispdf, setIspdf] = useState(false);
+    const [pdfUri, setPdfUri] = useState(null);
+    const navigation = useNavigation();
+    const route = useRoute();
     const { hasPermission, requestPermission } = useCameraPermission();
+
+    useEffect(() => {
+        if (route.params?.capturedImage) {
+            createAndShowPdf(route.params.capturedImage);
+        }
+    }, [route.params?.capturedImage]);
 
     const onCamera = async () => {
         const granted = await requestPermission();
@@ -30,6 +38,7 @@ export default function HomeScreen() {
         }
         navigation.navigate("Camera");
     };
+
     const onGalleryPress = async () => {
         console.log("Galeri açılıyor...");
 
@@ -45,20 +54,14 @@ export default function HomeScreen() {
 
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true, //Kırpma özelliğini burada yapıyoruz
+            allowsEditing: true,
             quality: 1,
         });
 
-        if (!result.canceled) {  //Eğer kullanıcı galeriden bir fotoğraf seçip işlem yapmazsa result.canceled true olur
-            //Kırpma yapılmazsa, doğrudan fotoğraf seçilir. -result.assets[0].uri
-            //Kırpma yapılırsa , kırpılmış fotoğraf seçilir. yine -result.assets[0].uri
-            console.log("Seçilen Görsel:", result.assets[0].uri);
+        if (!result.canceled) {
+            createAndShowPdf(result.assets[0].uri);
         }
     };
-
-
-
-
 
     return (
         <SafeAreaView className="items-center flex-1 justify-start bg-blue-400">
@@ -87,9 +90,11 @@ export default function HomeScreen() {
             <View className="items-center justify-center w-full h-[355px]">
                 <Text className="self-start ml-2 absolute top-4">All Projects</Text>
                 {ispdf ? (
-                    <Text>Pdf Var</Text>
+                    <TouchableOpacity onPress={viewPdf}>
+                        <Text style={{ color: 'blue' }}>PDF'yi Görüntüle</Text>
+                    </TouchableOpacity>
                 ) : (<Text>Pdf Yok</Text>)}
             </View>
         </SafeAreaView>
     );
-} 
+}
